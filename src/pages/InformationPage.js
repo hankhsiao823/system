@@ -1,10 +1,11 @@
 import { Box, Container, Divider, TextField, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useParams  } from "react-router-dom";
 import { CreateListTable } from "../components/Tables";
 import { ReactComponent as Search } from "./../svg/search.svg";
 
 export const InformationPage = () => {
   const navigate = useNavigate();
+  let { type } = useParams(); 
 
 
   return (
@@ -58,7 +59,7 @@ export const InformationPage = () => {
             ),
           }}
           type="text"
-          placeholder="可搜尋病歷號、身份證字號、姓名、就診日期"
+          placeholder="可搜尋病歷號"
         />
       </Box>
       <Container maxWidth="lg">
@@ -72,7 +73,7 @@ export const InformationPage = () => {
         >
           今日掛號病人
         </Typography>
-        <CreateListTable />
+        <CreateListTable type={type}/>
         <Typography
           sx={{
             fontSize: "1.875rem",
@@ -83,7 +84,7 @@ export const InformationPage = () => {
         >
           最近編輯病人
         </Typography>
-        <CreateListTable />
+        <CreateListTable type={type}/>
       </Container>
     </div>
   );

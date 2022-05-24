@@ -3,7 +3,7 @@ import { useForm, FormProvider, useFormContext } from "react-hook-form";
 import { Box, Button, Divider, Typography } from "@mui/material";
 import { ReactComponent as Edit } from "./../svg/edit.svg";
 
-export const NervousPage = () => {
+export const TraumaPage = () => {
   const methods = useForm({ mode: "onBlur" });
 
   const { handleSubmit } = methods;
@@ -74,7 +74,7 @@ export const NervousPage = () => {
             alignSelf: "end",
           }}
         >
-          焦慮自我評估量表
+          創傷篩檢問卷
         </Typography>
         <Button
           startIcon={<Edit />}
@@ -84,9 +84,20 @@ export const NervousPage = () => {
         </Button>
       </Box>
       <Typography
-        sx={{ fontSize: "2rem", fontWeight: "bold", ml: "49px", mb: "82px" }}
+        sx={{ fontSize: "1.5rem", fontWeight: "bold", mx: "49px", mb: "40px" }}
       >
-        在過去兩個星期，你有多經常受以下問題困擾？
+        請你思考下列創傷事件後有時會出現的反應，本問卷的目的是關心你在經歷這項發生在身上的創傷事件後所出現的反應。請你判斷在過去一週是否曾經歷以下所列列出的任何情形至少兩次。
+      </Typography>
+      <Typography
+        sx={{ fontSize: "1.5rem", fontWeight: "bold", mx: "49px", mb: "40px" }}
+      >
+        如果任一題敘述的情形在過去一週至少出現兩次，勾選「是」
+        ；若此情形只出現一次或完全沒有出現，勾選「否」。
+      </Typography>
+      <Typography
+        sx={{ fontSize: "1.5rem", fontWeight: "bold", mx: "49px", mb: "40px" }}
+      >
+        （是 = 過去一週至少兩次；否 = 過去一週僅一次或未出現）
       </Typography>
       <FormProvider {...methods}>
         <form
@@ -103,7 +114,7 @@ export const NervousPage = () => {
             <Box
               sx={{
                 textAlign: "center",
-                background: "#C3834E",
+                background: "#A5807B",
                 borderRadius: "10px",
                 p: "3px",
               }}
@@ -113,7 +124,7 @@ export const NervousPage = () => {
                   borderCollapse: "separate",
                   borderSpacing: 0,
                   "& td": {
-                    border: "4px solid #C3834E",
+                    border: "4px solid #A5807B",
                     background: "#f4f4ea",
                     fontSize: "1.25rem",
                   },
@@ -126,7 +137,7 @@ export const NervousPage = () => {
                     sx={{
                       "& td": {
                         color: "#fff",
-                        background: "#DFAA86",
+                        background: "#B89E9B",
                         fontSize: "1.5rem",
                         fontWeight: "bold",
                       },
@@ -136,32 +147,17 @@ export const NervousPage = () => {
                       component="td"
                       sx={{
                         borderTopLeftRadius: "10px",
-                        width: "380px",
-                        height: "100px",
+                        width: "74px",
+                        height: "53px",
                       }}
                     >
-                      項目
+                      是
                     </Box>
-                    <Box component="td" sx={{ width: "147px" }}>
-                      完全沒有
-                      <br />
-                      (0分)
+                    <Box component="td" sx={{ width: "74px" }}>
+                      否
                     </Box>
-                    <Box component="td" sx={{ width: "147px" }}>
-                      幾天
-                      <br />
-                      (1分)
-                    </Box>
-                    <Box component="td" sx={{ width: "147px" }}>
-                      一半以上的天數(2分)
-                    </Box>
-                    <Box
-                      component="td"
-                      sx={{ borderTopRightRadius: "10px", width: "147px" }}
-                    >
-                      近乎每天
-                      <br />
-                      (3分)
+                    <Box component="td" sx={{ width: "800px" }}>
+                      症狀
                     </Box>
                   </Box>
 
@@ -207,13 +203,22 @@ export const NervousPage = () => {
 };
 
 const item = [
-  { title: "感到緊張、不安或煩躁", name: "item_one" },
-  { title: "無法停止或控制憂慮", name: "item_two" },
-  { title: "過份憂慮不同的事情", name: "item_three" },
-  { title: "難以放鬆", name: "item_four" },
-  { title: "心情不寧以致坐立不安", name: "item_five" },
-  { title: "容易心煩或易怒", name: "item_six" },
-  { title: "感到害怕、就像要發生可怕的事情", name: "item_seven" },
+  {
+    title: "與該事件相關且令人不舒服的想法和記憶，會在你不想要的時候。",
+    name: "item_one",
+  },
+  { title: "進入你心中。作與該事件相關令人不舒服的夢。", name: "item_two" },
+  { title: "出現彷彿該事件又重新發生般的舉動或感覺。", name: "item_three" },
+  { title: "遇到與該事件相關的事物而感覺不舒服。", name: "item_four" },
+  {
+    title: "回想該事件時出現身體反應(如心跳加速、胃部劇烈攪動、冒汗、暈眩)。",
+    name: "item_five",
+  },
+  { title: "難以入睡或保持安睡。", name: "item_six" },
+  { title: "躁動不安或爆發憤恕。", name: "item_seven" },
+  { title: "難以專注。", name: "item_eight" },
+  { title: "對可能威脅自己與他人的危險提高警覺。", name: "item_nine" },
+  { title: "對出乎意料的事物提心吊膽或驚嚇。", name: "item_ten" },
 ];
 
 function ItemRow() {
@@ -242,15 +247,37 @@ function ItemRow() {
                 height: "65px",
               },
               "&:checked + label": {
-                background: "#DFAA86",
+                background: "#B89E9B",
               },
             },
           }}
         >
+          <Box component="td">
+            <input
+              {...register(name, {
+                required: "必填",
+              })}
+              type="radio"
+              value="1"
+              id={name}
+            />
+            <Box htmlFor={name} component="label"></Box>
+          </Box>
+          <Box component="td">
+            <input
+              {...register(name, {
+                required: "必填",
+              })}
+              type="radio"
+              value="0"
+              id={name + 1}
+            />
+            <Box htmlFor={name + 1} component="label"></Box>
+          </Box>
           <Box
             component="td"
             sx={{
-              height: "72px",
+              height: "53px",
               fontWeight: "bold",
               textAlign: "start",
               p: 2,
@@ -261,19 +288,6 @@ function ItemRow() {
               <Typography color="error">{errors[name].message}</Typography>
             )}
           </Box>
-          {[0, 1, 2, 3].map((value) => (
-            <Box component="td" key={name + value}>
-              <input
-                {...register(name, {
-                  required: "必填",
-                })}
-                type="radio"
-                value="1"
-                id={name + value}
-              />
-              <Box htmlFor={name + value} component="label"></Box>
-            </Box>
-          ))}
         </Box>
       ))}
     </>

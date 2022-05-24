@@ -23,12 +23,16 @@ const list = [
   {
     title: "身心壓力表",
     item: [
-      { name: "困擾溫度計(DT)", url: "", editUrl: "" },
-      { name: "身心調適摘要表", url: "", editUrl: "/edit/psychosomatic-summary " },
-      { name: "創傷篩檢問卷", url: "/trauma-list", editUrl: "" },
-      { name: "焦慮自我評估量表", url: "", editUrl: "" },
-      { name: "病人健康問卷", url: "", editUrl: "" },
-      { name: "匹茲堡睡眠品質量表", url: "", editUrl: "" },
+      { name: "困擾溫度計(DT)", url: "", editUrl: "/edit/distress" },
+      {
+        name: "身心調適摘要表",
+        url: "",
+        editUrl: "/edit/psychosomatic-summary",
+      },
+      { name: "創傷篩檢問卷", url: "/trauma-list", editUrl: "/edit/trauma" },
+      { name: "焦慮自我評估量表", url: "", editUrl: "/edit/nervous" },
+      { name: "病人健康問卷", url: "", editUrl: "/edit/healthy" },
+      { name: "匹茲堡睡眠品質量表", url: "", editUrl: "/edit/sleep" },
       { name: "身心壓力評估紀錄表", url: "", editUrl: "" },
     ],
   },
@@ -43,6 +47,7 @@ const list = [
 const Layout = () => {
   const { pathname } = useLocation();
   const [layout, setLayout] = React.useState(true);
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     if (!pathname.includes("/edit")) {
@@ -52,15 +57,22 @@ const Layout = () => {
     }
   }, [pathname]);
 
+  // const user = false;
+  // React.useEffect(() => {
+  //   if (!user) {
+  //     return navigate("/login");
+  //   }
+  // }, [user, navigate]);
+
   return (
     <Box sx={{ display: "flex", height: "100vh" }}>
       {layout ? <SideComponent /> : <EditSideComponent />}
-      {/* <SideComponent /> */}
-      {/* <EditSideComponent /> */}
       <Outlet />
     </Box>
   );
 };
+
+
 
 function SideComponent() {
   const [open, setOpen] = React.useState();
@@ -133,7 +145,7 @@ function SideComponent() {
         >
           垃圾桶
         </Button>
-        <Button sx={{ fontSize: "1.5rem", color: "#000", fontWeight: "bold" }}>
+        <Button sx={{ fontSize: "1.5rem", color: "#000", fontWeight: "bold" }} onClick={() => navigate("/login")}>
           登出
         </Button>
       </Box>
@@ -195,8 +207,11 @@ function EditSideComponent() {
         </ListItemButton>
         <Collapse in={listOpen.edit} timeout="auto" unmountOnExit>
           {list
-            .filter((data) => data.title === "收案紀錄表")[0]
-            .item.map(({ name, editUrl }) => (
+            // .filter((data) => data.title === "收案紀錄表")[0]
+            .filter(({ item }) =>
+              item.some(({ editUrl }) => editUrl === location.pathname)
+            )[0]
+            ?.item.map(({ name, editUrl }) => (
               <List
                 key={name}
                 component="div"
@@ -236,7 +251,12 @@ function EditSideComponent() {
         </ListItemButton>
         <Collapse in={listOpen.preview} timeout="auto" unmountOnExit>
           {list
-            .filter(({ title }) => title !== "收案紀錄表")
+            // .filter(({ title }) => title !== "收案紀錄表" && title !== "匯入")
+            .filter(
+              ({ title, item }) =>
+                !item.some(({ editUrl }) => editUrl === location.pathname) &&
+                title !== "匯入"
+            )
             .map(({ title, item }) => (
               <Box key={title}>
                 <ListItemButton onClick={() => handleClick(title)}>
@@ -301,10 +321,7 @@ function EditSideComponent() {
         </Collapse>
       </List>
       <Box sx={{ display: "flex", justifyContent: "center", px: 2 }}>
-        <Button
-          sx={{ fontSize: "2rem", color: "#000", fontWeight: "bold" }}
-          // onClick={() => navigate("/trash")}
-        >
+        <Button sx={{ fontSize: "2rem", color: "#000", fontWeight: "bold" }} onClick={()=>navigate("./")}>
           結案
         </Button>
       </Box>

@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 
 export const HomePage = () => {
   return (
-    <div style={{ background: "#F4F4EB", height: "100vh", position: "relative " }}>
+    <div
+      style={{ background: "#F4F4EB", height: "100vh", position: "relative " }}
+    >
       <header>
         <h1
           style={{
@@ -35,7 +37,7 @@ export const HomePage = () => {
           alignItems: "center",
           height: "100%",
           width: "50%",
-          margin: '0 auto'
+          margin: "0 auto",
         }}
       >
         <tbody
@@ -47,12 +49,12 @@ export const HomePage = () => {
         >
           <tr>
             <td>
-              <Link to="./information">
+              <Link to="./information/收案紀錄表">
                 <img src="assets/images/record.png" alt="收案" height="150px" />
               </Link>
             </td>
             <td>
-              <Link to="./tracking">
+              <Link to="./">
                 <img
                   src="assets/images/mobileTrack.png"
                   alt="電話追蹤"
@@ -63,7 +65,7 @@ export const HomePage = () => {
           </tr>
           <tr>
             <td>
-              <Link to="./social">
+              <Link to="./information/社會心理評估表">
                 <img
                   src="assets/images/socialPsychology.png"
                   alt="社會心理"
@@ -72,7 +74,7 @@ export const HomePage = () => {
               </Link>
             </td>
             <td>
-              <Link to="./pressure">
+              <Link to="./information/身心壓力評估表">
                 <img
                   src="assets/images/physicalAndMental_Stress.png"
                   alt="身心壓力"

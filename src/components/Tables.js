@@ -1,5 +1,4 @@
 import * as React from "react";
-import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
@@ -17,7 +16,8 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import DriveFileRenameOutlineOutlinedIcon from "@mui/icons-material/DriveFileRenameOutlineOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import { Button, ButtonBase, Divider } from "@mui/material";
+import { Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 // function createData(name, calories, fat, carbs, protein, price) {
 //   return {
@@ -163,7 +163,8 @@ const rows = [
   createData("Gingerbread", 356, 16.0, 49, 3.9),
 ];
 
-function CreateListTable() {
+function CreateListTable({ type }) {
+  const navigate = useNavigate();
   return (
     <TableContainer sx={{ minWidth: "280px", width: "100%", px: 4 }}>
       <Table sx={{ overflow: "hidden" }}>
@@ -188,7 +189,6 @@ function CreateListTable() {
           {rows.map((row) => (
             <TableRow
               key={row.name}
-              // sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               sx={{
                 "& td": {
                   border: "3px solid #5E574E",
@@ -204,7 +204,7 @@ function CreateListTable() {
                 123456789
               </TableCell>
               <TableCell align="center" sx={{ width: "30%" }}>
-                收案紀錄表
+                {type}
               </TableCell>
               <TableCell align="center" sx={{ width: "20%" }}>
                 <Box
@@ -223,6 +223,7 @@ function CreateListTable() {
                         lineHeight: "1.25rem",
                       }}
                       startIcon={<AddIcon />}
+                      onClick={() => navigate("/edit/detail")}
                     >
                       新增
                     </Button>
@@ -251,6 +252,7 @@ function CreateListTable() {
 }
 
 function DetailListTable() {
+  const navigate = useNavigate();
   return (
     <TableContainer sx={{ minWidth: "280px", width: "100%", px: 4 }}>
       <Table sx={{ overflow: "hidden" }}>
@@ -319,6 +321,7 @@ function DetailListTable() {
                         lineHeight: "1.25rem",
                       }}
                       startIcon={<DriveFileRenameOutlineOutlinedIcon />}
+                      onClick={() => navigate("/edit/detail")}
                     >
                       修改
                     </Button>
@@ -332,6 +335,7 @@ function DetailListTable() {
                         lineHeight: "1.25rem",
                       }}
                       startIcon={<DeleteOutlineOutlinedIcon />}
+                      onClick={() => navigate("/trash")}
                     >
                       刪除
                     </Button>
@@ -347,6 +351,7 @@ function DetailListTable() {
 }
 
 function TrashListTable() {
+  const navigate = useNavigate();
   return (
     <TableContainer sx={{ minWidth: "280px", width: "100%", px: 4 }}>
       <Table sx={{ overflow: "hidden" }}>
@@ -370,7 +375,6 @@ function TrashListTable() {
           {rows.map((row) => (
             <TableRow
               key={row.name}
-              // sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               sx={{
                 "& td": {
                   border: "3px solid #5E574E",

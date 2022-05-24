@@ -3,7 +3,7 @@ import { useForm, FormProvider, useFormContext } from "react-hook-form";
 import { Box, Button, Divider, Typography } from "@mui/material";
 import { ReactComponent as Edit } from "./../svg/edit.svg";
 
-export const NervousPage = () => {
+export const HealthyPage = () => {
   const methods = useForm({ mode: "onBlur" });
 
   const { handleSubmit } = methods;
@@ -74,7 +74,7 @@ export const NervousPage = () => {
             alignSelf: "end",
           }}
         >
-          焦慮自我評估量表
+          病人健康問卷
         </Typography>
         <Button
           startIcon={<Edit />}
@@ -86,7 +86,7 @@ export const NervousPage = () => {
       <Typography
         sx={{ fontSize: "2rem", fontWeight: "bold", ml: "49px", mb: "82px" }}
       >
-        在過去兩個星期，你有多經常受以下問題困擾？
+        在過去兩個星期，有多少時候您受到以下任何問題所困擾？
       </Typography>
       <FormProvider {...methods}>
         <form
@@ -103,7 +103,7 @@ export const NervousPage = () => {
             <Box
               sx={{
                 textAlign: "center",
-                background: "#C3834E",
+                background: "#8B9B78",
                 borderRadius: "10px",
                 p: "3px",
               }}
@@ -113,9 +113,24 @@ export const NervousPage = () => {
                   borderCollapse: "separate",
                   borderSpacing: 0,
                   "& td": {
-                    border: "4px solid #C3834E",
+                    border: "4px solid #8B9B78",
                     background: "#f4f4ea",
                     fontSize: "1.25rem",
+                    p:0
+                  },
+                  "& input[type='radio']": {
+                    appearance: "none",
+                    display: "none",
+                    "& + label": {
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "100%",
+                      height: "90px",
+                    },
+                    "&:checked + label": {
+                      background: "#B2C099",
+                    },
                   },
                 }}
                 component="table"
@@ -126,7 +141,7 @@ export const NervousPage = () => {
                     sx={{
                       "& td": {
                         color: "#fff",
-                        background: "#DFAA86",
+                        background: "#B2C099",
                         fontSize: "1.5rem",
                         fontWeight: "bold",
                       },
@@ -207,13 +222,22 @@ export const NervousPage = () => {
 };
 
 const item = [
-  { title: "感到緊張、不安或煩躁", name: "item_one" },
-  { title: "無法停止或控制憂慮", name: "item_two" },
-  { title: "過份憂慮不同的事情", name: "item_three" },
-  { title: "難以放鬆", name: "item_four" },
-  { title: "心情不寧以致坐立不安", name: "item_five" },
-  { title: "容易心煩或易怒", name: "item_six" },
-  { title: "感到害怕、就像要發生可怕的事情", name: "item_seven" },
+  { title: "做事時提不起勁或沒有樂趣", name: "item_one" },
+  { title: "感到心情低落、沮喪或絕望", name: "item_two" },
+  { title: "入睡困難、睡不安穩或睡眠過多", name: "item_three" },
+  { title: "感覺疲倦或沒有活力", name: "item_four" },
+  { title: "食慾不振或吃太多", name: "item_five" },
+  {
+    title: `覺得自己很糟或覺得自己很失敗，或讓自己或家人失望`,
+    name: "item_six",
+  },
+  { title: "對事物專注有困難，例如閱讀報紙或看電視時", name: "item_seven" },
+  {
+    title:
+      "動作或說話速度緩慢到別人已經察覺,或正好相反一煩躁或坐立不安、動來動去的情況更勝於平常",
+    name: "item_eight",
+  },
+  { title: "有不如死掉或用某種方式傷害自己的念頭", name: "item_nine" },
 ];
 
 function ItemRow() {
@@ -224,36 +248,13 @@ function ItemRow() {
   return (
     <>
       {item.map(({ title, name }) => (
-        <Box
-          component="tr"
-          key={name}
-          sx={{
-            "& td": {
-              p: 0,
-            },
-            "& input[type='radio']": {
-              appearance: "none",
-              display: "none",
-              "& + label": {
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: "100%",
-                height: "65px",
-              },
-              "&:checked + label": {
-                background: "#DFAA86",
-              },
-            },
-          }}
-        >
+        <Box component="tr" key={name}>
           <Box
             component="td"
             sx={{
               height: "72px",
               fontWeight: "bold",
               textAlign: "start",
-              p: 2,
             }}
           >
             {title}
@@ -268,8 +269,8 @@ function ItemRow() {
                   required: "必填",
                 })}
                 type="radio"
-                value="1"
                 id={name + value}
+                value={value}
               />
               <Box htmlFor={name + value} component="label"></Box>
             </Box>
