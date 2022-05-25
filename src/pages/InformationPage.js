@@ -1,12 +1,27 @@
 import { Box, Container, Divider, TextField, Typography } from "@mui/material";
-import { useNavigate,useParams  } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { CreateListTable } from "../components/Tables";
 import { ReactComponent as Search } from "./../svg/search.svg";
 
 export const InformationPage = () => {
   const navigate = useNavigate();
-  let { type } = useParams(); 
+  
+  let type;
 
+  const { root } = JSON.parse(localStorage.getItem("cinguan_token"));
+  switch (root) {
+    case "root1":
+      type = "收案紀錄表";
+      break;
+    case "root2":
+      type = "身心壓力表";
+      break;
+    case "root3":
+      type = "社會心理表";
+      break;
+    default:
+      break;
+  }
 
   return (
     <div style={{ flex: 1, overflowY: "scroll", padding: "0px 0px 56px 0px" }}>
@@ -73,7 +88,7 @@ export const InformationPage = () => {
         >
           今日掛號病人
         </Typography>
-        <CreateListTable type={type}/>
+        <CreateListTable type={type} />
         <Typography
           sx={{
             fontSize: "1.875rem",
@@ -84,7 +99,7 @@ export const InformationPage = () => {
         >
           最近編輯病人
         </Typography>
-        <CreateListTable type={type}/>
+        <CreateListTable type={type} />
       </Container>
     </div>
   );

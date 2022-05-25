@@ -1,11 +1,7 @@
-import {
-  Box,
-  Button,
-  Divider,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Divider, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 
 const inputStyle = {
   fontSize: "1.5rem",
@@ -29,8 +25,15 @@ const labelStyle = {
   color: "#5E574E",
 };
 
+const userList = [
+  { username: "root1", password: "123456", root: "root1" },
+  { username: "root2", password: "123456", root: "root2" },
+  { username: "root3", password: "123456", root: "root3" },
+];
+
 export const LoginPage = () => {
   const navigate = useNavigate();
+  const [error, setError] = useState(false);
   const {
     register,
     handleSubmit,
@@ -38,8 +41,17 @@ export const LoginPage = () => {
   } = useForm({});
 
   const onSubmit = (data) => {
-    console.log(data);
-    navigate("/")
+
+    const user = userList.filter(
+      ({ username, password }) =>
+        data.account === username && data.password === password
+    )[0]?.root;
+
+    if (!user) {
+      return setError(true);
+    }
+    localStorage.setItem("cinguan_token",JSON.stringify({ token: true, root: user }));
+    navigate("/");
   };
 
   return (
@@ -116,10 +128,11 @@ export const LoginPage = () => {
             </Box>
           )}
         </Box>
+        {error && <Typography color='error' sx={{mt:5}}>登入失敗帳號或密碼錯誤</Typography>}
         <Button
           variant="contained"
           sx={{
-            mt: 12,
+            mt: 10,
             fontSize: "2rem",
             fontWeight: "bold",
             borderRadius: "2rem",
