@@ -108,7 +108,6 @@ function SideComponent() {
   const [bgcolor,setBgcolor] = React.useState();
   const navigate = useNavigate();
   const location = useLocation();
-
   const handleClick = (name) => {
     setOpen(name);
   };
@@ -216,7 +215,7 @@ const init = {
 function EditSideComponent() {
   const [listOpen, setListOpen] = React.useState(init);
   const [listItemOpen, setListItemOpen] = React.useState();
-  const [bgcolor,setBgcolor] = React.useState("收案紀錄表");
+  const [bgcolor,setBgcolor] = React.useState();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -270,7 +269,7 @@ function EditSideComponent() {
           {list
             // .filter((data) => data.title === "收案紀錄表")[0]
             .filter(({ item,title }) =>
-              item.some(({ editUrl,name }) => location.pathname === editUrl && name === bgcolor)
+              item.some(({ editUrl,name }) => location.pathname === editUrl || name === bgcolor )
             )[0]
             ?.item.map(({ name, editUrl }) => (
               <List
