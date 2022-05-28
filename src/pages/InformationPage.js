@@ -8,15 +8,15 @@ export const InformationPage = () => {
   
   let type;
 
-  const { root } = JSON.parse(localStorage.getItem("cinguan_token"));
-  switch (root) {
-    case "root1":
+  const { office_code } = JSON.parse(localStorage.getItem("cinguan_token"));
+  switch (office_code) {
+    case "A":
       type = "收案紀錄表";
       break;
-    case "root2":
+    case "B":
       type = "身心壓力表";
       break;
-    case "root3":
+    case "C":
       type = "社會心理表";
       break;
     default:
@@ -87,17 +87,6 @@ export const InformationPage = () => {
           }}
         >
           今日掛號病人
-        </Typography>
-        <CreateListTable type={type} />
-        <Typography
-          sx={{
-            fontSize: "1.875rem",
-            fontWeight: "bold",
-            mt: "27.5px",
-            mb: 4,
-          }}
-        >
-          最近編輯病人
         </Typography>
         <CreateListTable type={type} />
       </Container>

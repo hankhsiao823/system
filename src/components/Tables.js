@@ -29,7 +29,7 @@ const rows = [
 
 function CreateListTable({ type }) {
   const navigate = useNavigate();
-  const { root } = JSON.parse(localStorage.getItem("cinguan_token"));
+  const { office_code } = JSON.parse(localStorage.getItem("cinguan_token"));
   return (
     <TableContainer sx={{ minWidth: "280px", width: "100%", px: 4 }}>
       <Table sx={{ overflow: "hidden" }}>
@@ -89,7 +89,7 @@ function CreateListTable({ type }) {
                       }}
                       startIcon={<AddIcon />}
                       onClick={() =>
-                        root === "root2"
+                        office_code === "B"
                           ? navigate("/edit/distress")
                           : navigate("/edit/detail")
                       }

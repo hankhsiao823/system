@@ -2,6 +2,7 @@ import { Box, Button, Divider, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import authService from "../services/auth.service";
 
 const inputStyle = {
   fontSize: "1.5rem",
@@ -40,18 +41,27 @@ export const LoginPage = () => {
     formState: { errors },
   } = useForm({});
 
+  console.log(sessionStorage);
   const onSubmit = (data) => {
+    authService
+      .login(data.account, data.password)
+      .then((res) => {
+        const data = res.data;
+        const root = data[0]
+        localStorage.setItem("cinguan_token",JSON.stringify(root));
+        navigate("/");
+      })
+      .catch((e) => console.log(e));
 
-    const user = userList.filter(
-      ({ username, password }) =>
-        data.account === username && data.password === password
-    )[0]?.root;
+    // const user = userList.filter(
+    //   ({ username, password }) =>
+    //     data.account === username && data.password === password
+    // )[0]?.root;
 
-    if (!user) {
-      return setError(true);
-    }
-    localStorage.setItem("cinguan_token",JSON.stringify({ token: true, root: user }));
-    navigate("/");
+    // if (!user) {
+    //   return setError(true);
+    // }
+    // localStorage.setItem("cinguan_token",JSON.stringify({ token: true, root: user }));
   };
 
   return (
@@ -128,7 +138,11 @@ export const LoginPage = () => {
             </Box>
           )}
         </Box>
-        {error && <Typography color='error' sx={{mt:5}}>登入失敗帳號或密碼錯誤</Typography>}
+        {error && (
+          <Typography color="error" sx={{ mt: 5 }}>
+            登入失敗帳號或密碼錯誤
+          </Typography>
+        )}
         <Button
           variant="contained"
           sx={{

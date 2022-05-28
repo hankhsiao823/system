@@ -12,6 +12,7 @@ import { useNavigate, useLocation, Outlet } from "react-router-dom";
 import { ReactComponent as ListOpenIcon } from "./../svg/listOpencon.svg";
 import { ReactComponent as ListCloseIcon } from "./../svg/listCloseIcon.svg";
 import { ProtectedRoute } from "./ProtectedRoute";
+import authService from "../services/auth.service";
 
 const list = [
   {
@@ -105,21 +106,26 @@ const EditLayout = () => {
 
 function SideComponent() {
   const [open, setOpen] = React.useState();
-  const [bgcolor,setBgcolor] = React.useState();
+  const [bgcolor, setBgcolor] = React.useState();
   const navigate = useNavigate();
   const location = useLocation();
   const handleClick = (name) => {
     setOpen(name);
   };
 
-  const handleListCheckedBgcolor=(url,name)=>{
-    navigate(url)
-    setBgcolor(name)
-  }
+  const handleListCheckedBgcolor = (url, name) => {
+    navigate(url);
+    setBgcolor(name);
+  };
 
   const handleLogout = () => {
-    localStorage.removeItem("cinguan_token");
-    navigate("/login");
+    authService
+      .logout()
+      .then(() => {
+        localStorage.removeItem("cinguan_token");
+        navigate("/login");
+      })
+      .catch((e) => console.log(e));
   };
 
   return (
@@ -172,10 +178,16 @@ function SideComponent() {
                   component="div"
                   disablePadding
                   sx={{
-                    background: location.pathname === url && name === bgcolor ? "#f4f4ea" : null,
+                    background:
+                      location.pathname === url && name === bgcolor
+                        ? "#f4f4ea"
+                        : null,
                   }}
                 >
-                  <ListItemButton sx={{ pl: 8 }} onClick={() => handleListCheckedBgcolor(url,name)}>
+                  <ListItemButton
+                    sx={{ pl: 8 }}
+                    onClick={() => handleListCheckedBgcolor(url, name)}
+                  >
                     <ListItemText
                       primary={name}
                       sx={{
@@ -213,17 +225,20 @@ const init = {
 };
 
 function EditSideComponent() {
+  const { office_code } = JSON.parse(localStorage.getItem("cinguan_token"));
   const [listOpen, setListOpen] = React.useState(init);
   const [listItemOpen, setListItemOpen] = React.useState();
-  const [bgcolor,setBgcolor] = React.useState();
+  const [bgcolor, setBgcolor] = React.useState(
+    office_code === "B" ? "困擾溫度計(DT)" : "收案紀錄表"
+  );
 
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleListCheckedBgcolor=(url,name)=>{
-    navigate(url)
-    setBgcolor(name)
-  }
+  const handleListCheckedBgcolor = (url, name) => {
+    navigate(url);
+    setBgcolor(name);
+  };
 
   const handleEditListClick = () => {
     setListOpen({ ...listOpen, edit: !listOpen.edit });
@@ -268,8 +283,11 @@ function EditSideComponent() {
         <Collapse in={listOpen.edit} timeout="auto" unmountOnExit>
           {list
             // .filter((data) => data.title === "收案紀錄表")[0]
-            .filter(({ item,title }) =>
-              item.some(({ editUrl,name }) => location.pathname === editUrl || name === bgcolor )
+            .filter(({ item, title }) =>
+              item.some(
+                ({ editUrl, name }) =>
+                  location.pathname === editUrl && name === bgcolor
+              )
             )[0]
             ?.item.map(({ name, editUrl }) => (
               <List
@@ -282,7 +300,7 @@ function EditSideComponent() {
               >
                 <ListItemButton
                   sx={{ pl: 8 }}
-                  onClick={() => handleListCheckedBgcolor(editUrl,name)}
+                  onClick={() => handleListCheckedBgcolor(editUrl, name)}
                 >
                   <ListItemText
                     primary={name}
@@ -314,8 +332,10 @@ function EditSideComponent() {
             // .filter(({ title }) => title !== "收案紀錄表" && title !== "匯入")
             .filter(
               ({ title, item }) =>
-                !item.some(({ editUrl,name }) => location.pathname === editUrl && name === bgcolor) &&
-                title !== "匯入"
+                !item.some(
+                  ({ editUrl, name }) =>
+                    location.pathname === editUrl && name === bgcolor
+                ) && title !== "匯入"
             )
             .map(({ title, item }) => (
               <Box key={title}>
@@ -356,12 +376,14 @@ function EditSideComponent() {
                       disablePadding
                       sx={{
                         background:
-                        location.pathname === editUrl && name === bgcolor ? "#f4f4ea" : null,
+                          location.pathname === editUrl && name === bgcolor
+                            ? "#f4f4ea"
+                            : null,
                       }}
                     >
                       <ListItemButton
                         sx={{ pl: 11 }}
-                        onClick={() => handleListCheckedBgcolor(editUrl,name)}
+                        onClick={() => handleListCheckedBgcolor(editUrl, name)}
                       >
                         <ListItemText
                           primary={name}

@@ -2,6 +2,7 @@ import React from "react";
 import { useForm, FormProvider, useFormContext } from "react-hook-form";
 import { Box, Button, Divider, Typography } from "@mui/material";
 import { ReactComponent as Edit } from "./../svg/edit.svg";
+import SleepService from "../services/sleep.service";
 
 export const SleepPage = () => {
   const methods = useForm({ mode: "onBlur" });
@@ -31,7 +32,9 @@ export const SleepPage = () => {
   // };
 
   const onSubmit = (data) => {
-    console.log(data);
+    SleepService.createSleep(data)
+      .then((res) => console.log(res))
+      .catch((e) => console.log(e));
   };
 
   return (
@@ -114,7 +117,7 @@ export const SleepPage = () => {
               gap: "24px",
             }}
           >
-            <Box>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
               1.過去一個月來,您晚上通常幾點上床睡覺?
               <input
                 type="time"
@@ -126,19 +129,20 @@ export const SleepPage = () => {
                 <Typography color="error">{errors.item_one.message}</Typography>
               )}
             </Box>
-            <Box>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
               2.過去一個月來,您在上床後,通常躺多久才能入睡?
               <input
-                type="time"
+                type="text"
                 {...register("item_two", {
                   required: "必填",
                 })}
               />
+              分
               {errors.item_two && (
                 <Typography color="error">{errors.item_two.message}</Typography>
               )}
             </Box>
-            <Box>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
               3.過去一個月來,您上通常幾點起床?
               <input
                 type="time"
@@ -152,7 +156,7 @@ export const SleepPage = () => {
                 </Typography>
               )}
             </Box>
-            <Box>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
               4過去一個月來,您每天晚上真正睡著的時間約多少?
               <input
                 type="text"
@@ -166,11 +170,23 @@ export const SleepPage = () => {
                   {errors.item_four.message}
                 </Typography>
               )}
+              <input
+                type="text"
+                {...register("item_four_two", {
+                  required: "必填",
+                })}
+              />
+              分
+              {errors.item_four_two && (
+                <Typography color="error">
+                  {errors.item_four_two.message}
+                </Typography>
+              )}
               <br />
-              <span style={{ fontSize: "1.25rem" }}>
-                (這可能和您躺在床上所花的時間不同)
-              </span>
             </Box>
+            <span style={{ fontSize: "1.25rem" }}>
+              (這可能和您躺在床上所花的時間不同)
+            </span>
           </Box>
           <Typography
             sx={{
@@ -489,14 +505,14 @@ function OtherTable() {
                 )}
               </Box>
               {["完全沒有困擾", "只有很少困擾", "有些困擾", "有很大的困擾"].map(
-                (value) => (
+                (value, index) => (
                   <Box component="td" key={value}>
                     <input
                       {...register("item_seventeen", {
                         required: "必填",
                       })}
                       type="radio"
-                      value={value}
+                      value={index}
                       id={value}
                     />
                     <Box htmlFor={value} component="label"></Box>
@@ -605,14 +621,14 @@ function OtherTable() {
                   </Typography>
                 )}
               </Box>
-              {["非常好", "好", "不好", "非常不好"].map((value) => (
+              {["非常好", "好", "不好", "非常不好"].map((value, index) => (
                 <Box component="td" key={value}>
                   <input
                     {...register("item_eighteen", {
                       required: "必填",
                     })}
                     type="radio"
-                    value={value}
+                    value={index}
                     id={value}
                   />
                   <Box htmlFor={value} component="label"></Box>
