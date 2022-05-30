@@ -116,17 +116,23 @@ export const HealthyPage = () => {
                     border: "4px solid #8B9B78",
                     background: "#f4f4ea",
                     fontSize: "1.25rem",
-                    p:0
+                    position: 'relative',
+                    p:1
                   },
                   "& input[type='radio']": {
                     appearance: "none",
                     display: "none",
                     "& + label": {
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: "100%",
-                      height: "90px",
+                      // display: "flex",
+                      // alignItems: "center",
+                      // justifyContent: "center",
+                      // width: "100%",
+                      // height: "90px",
+                      position: 'absolute',
+                      left: -1,
+                      right: -1,
+                      top:-1,
+                      bottom:-1
                     },
                     "&:checked + label": {
                       background: "#B2C099",

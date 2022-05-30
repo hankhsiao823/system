@@ -1,17 +1,135 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useForm, FormProvider, useFormContext } from "react-hook-form";
 import { Box, Button, Divider, Typography } from "@mui/material";
 import { ReactComponent as Edit } from "./../svg/edit.svg";
 import SleepService from "../services/sleep.service";
 
 export const SleepPage = () => {
-  const methods = useForm({ mode: "onBlur" });
+  const [total, setTotal] = useState(false);
+  const defaultValues = {
+    item_eight: "",
+    item_eighteen: "",
+    item_eleven: "",
+    item_fifteen: "",
+    item_five: "",
+    item_four: "",
+    item_four_two: "",
+    item_fourteen: "",
+    item_nine: "",
+    item_one: "",
+    item_seven: "",
+    item_seventeen: "",
+    item_six: "",
+    item_sixteen: "",
+    item_ten: "",
+    item_thirteen: "",
+    item_three: "",
+    item_twelve: "",
+    item_two: "",
+  };
+  const methods = useForm({ mode: "onBlur", defaultValues });
 
   const {
     handleSubmit,
     register,
     formState: { errors },
+    watch,
   } = methods;
+  const {
+    item_two,
+    item_four,
+    item_eight,
+    item_eighteen,
+    item_eleven,
+    item_fifteen,
+    item_five,
+    item_fourteen,
+    item_nine,
+    item_seven,
+    item_seventeen,
+    item_six,
+    item_sixteen,
+    item_ten,
+    item_thirteen,
+    item_twelve,
+  } = watch();
+
+  const update = React.useRef(false);
+
+  useEffect(() => {
+    if (update.current) {
+      setTotal(handleTotal());
+    }
+    return () => (update.current = true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [watch()]);
+
+  console.log(update.current);
+  function getFallAsleep(value) {
+    let result;
+    if (value < 30) {
+      result = 0;
+    } else if (30 <= value && value < 60) {
+      result = 1;
+    } else if (60 <= value) {
+      result = 2;
+    }
+    return result;
+  }
+
+  function getSleepHour(value) {
+    let result;
+    if (7 <= value) {
+      result = 0;
+    } else if (6 <= value && value < 7) {
+      result = 1;
+    } else if (4 <= value && value <= 5) {
+      result = 2;
+    } else {
+      result = 3;
+    }
+    return result;
+  }
+
+  function getSleepProblem(obj) {
+    let result = 0;
+    for (var prop in obj) {
+      let value = parseInt(obj[prop]);
+      if (isNaN(value)) {
+        value = 0;
+      }
+      result = result + value;
+    }
+    return result;
+  }
+
+  function handleTotal() {
+    let get_fall_asleep_score = Number(item_two);
+    let get_sleep_hour_score = Number(item_four);
+    let get_sleep_problem_score = {
+      item_eight,
+      item_eighteen,
+      item_eleven,
+      item_fifteen,
+      item_five,
+      item_fourteen,
+      item_nine,
+      item_seven,
+      item_seventeen,
+      item_six,
+      item_sixteen,
+      item_ten,
+      item_thirteen,
+      item_twelve,
+    };
+    get_fall_asleep_score = getFallAsleep(get_fall_asleep_score);
+    get_sleep_hour_score = getSleepHour(get_sleep_hour_score);
+    get_sleep_problem_score = getSleepProblem(get_sleep_problem_score);
+
+    return (
+      get_fall_asleep_score + get_sleep_hour_score + get_sleep_problem_score
+    );
+  }
 
   // const onSubmit = async (data) => {
   //   await fetch(
@@ -32,9 +150,9 @@ export const SleepPage = () => {
   // };
 
   const onSubmit = (data) => {
-    SleepService.createSleep(data)
-      .then((res) => console.log(res))
-      .catch((e) => console.log(e));
+    // SleepService.createSleep(data)
+    //   .then((res) => console.log(res))
+    //   .catch((e) => console.log(e));
   };
 
   return (
@@ -276,8 +394,34 @@ export const SleepPage = () => {
               </Box>
             </Box>
             <OtherTable />
+            <Box
+            sx={{
+              display: "flex",
+              fontSize: "1.5rem",
+              fontWeight: "bold",
+              alignItems: "center",
+              justifyContent:'flex-end'
+            }}
+          >
+            總分
+            <Box
+              sx={{
+                border: "2px solid #8AA6B1",
+                width: "128px",
+                height: "47px",
+                textAlign: "center",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: "16px",
+                ml:1,
+              }}
+            >
+              {total}
+            </Box>
           </Box>
-
+          </Box>
+          
           <Box sx={{ mt: 7, alignSelf: "center" }}>
             <Button
               sx={{
@@ -347,18 +491,25 @@ function ItemRow() {
           component="tr"
           key={name}
           sx={{
+            
             "& td": {
-              p: 0,
+              position: 'relative',
+              p: 1,
             },
             "& input[type='radio']": {
               appearance: "none",
               display: "none",
               "& + label": {
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: "100%",
-                height: "65px",
+                // display: "flex",
+                // alignItems: "center",
+                // justifyContent: "center",
+                // width: "100%",
+                // height: "65px",
+                position: 'absolute',
+                left: -1,
+                right: -1,
+                top:-1,
+                bottom:-1
               },
               "&:checked + label": {
                 background: "#A4B6BA",
@@ -468,17 +619,18 @@ function OtherTable() {
               component="tr"
               sx={{
                 "& td": {
-                  p: 0,
+                  position: 'relative',
+                  p: 1,
                 },
                 "& input[type='radio']": {
                   appearance: "none",
                   display: "none",
                   "& + label": {
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "100%",
-                    height: "65px",
+                    position: 'absolute',
+                    left: -1,
+                    right: -1,
+                    top:-1,
+                    bottom:-1
                   },
                   "&:checked + label": {
                     background: "#A4B6BA",
@@ -585,17 +737,18 @@ function OtherTable() {
               component="tr"
               sx={{
                 "& td": {
-                  p: 0,
+                  position: 'relative',
+                  p: 1,
                 },
                 "& input[type='radio']": {
                   appearance: "none",
                   display: "none",
                   "& + label": {
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "100%",
-                    height: "65px",
+                    position: 'absolute',
+                    left: -1,
+                    right: -1,
+                    top:-1,
+                    bottom:-1
                   },
                   "&:checked + label": {
                     background: "#A4B6BA",

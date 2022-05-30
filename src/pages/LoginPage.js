@@ -41,7 +41,6 @@ export const LoginPage = () => {
     formState: { errors },
   } = useForm({});
 
-  console.log(sessionStorage);
   const onSubmit = (data) => {
     authService
       .login(data.account, data.password)
