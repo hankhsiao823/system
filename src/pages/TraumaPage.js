@@ -1,33 +1,38 @@
 import React from "react";
 import { useForm, FormProvider, useFormContext } from "react-hook-form";
-import { Box, Button, Divider, Typography } from "@mui/material";
-import { ReactComponent as Edit } from "./../svg/edit.svg";
+import { Box, Divider, Typography } from "@mui/material";
+import EditModifyComponent from "../components/EditModifyComponent";
+import SubmitOrResetComponent from "../components/SubmitOrResetComponent";
+import { useModel } from "../hook/useModel";
+
+const defaultValues = {
+  item_one: "是",
+  item_two: "是",
+  item_three: "否",
+  item_four: "是",
+  item_five: "是",
+  item_six: "否",
+  item_seven: "是",
+  item_eight: "否",
+  item_nine: "是",
+  item_ten: "否",
+};
 
 export const TraumaPage = () => {
-  const methods = useForm({ mode: "onBlur" });
+  const model = useModel();
+
+  const methods = useForm({
+    mode: "onBlur",
+    defaultValues: React.useMemo(() => {
+      return model && defaultValues;
+    }, [model]),
+  });
 
   const { handleSubmit } = methods;
 
-  // const onSubmit = async (data) => {
-  //   await fetch(
-  //     "https://1e01-2001-b011-4007-19c5-5092-66f9-5015-4a08.ngrok.io/api/createcase",
-  //     {
-  //       method: "POST",
-  //       mode: "cors",
-  //       body: JSON.stringify(data),
-  //       headers: { "Content-Type": "application/json" },
-  //     }
-  //   )
-  //     .then((res) => res.json())
-  //     .then((json) => console.log(json))
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  //   alert(data);
-  // };
-
   const onSubmit = (data) => {
     console.log(data);
+    alert("儲存成功");
   };
 
   return (
@@ -76,12 +81,7 @@ export const TraumaPage = () => {
         >
           創傷篩檢問卷
         </Typography>
-        <Button
-          startIcon={<Edit />}
-          sx={{ fontSize: "1.5rem", color: "#6A594F", ml: "auto", mr: "61px" }}
-        >
-          修改
-        </Button>
+        <EditModifyComponent />
       </Box>
       <Typography
         sx={{ fontSize: "1.5rem", fontWeight: "bold", mx: "49px", mb: "40px" }}
@@ -161,40 +161,14 @@ export const TraumaPage = () => {
                     </Box>
                   </Box>
 
-                  <ItemRow />
+                  <ItemRow model={model} />
                 </Box>
               </Box>
             </Box>
           </Box>
 
           <Box sx={{ mt: 7 }}>
-            <Button
-              sx={{
-                color: "#fff",
-                background: "#95B2B5",
-                width: "100px",
-                height: "35px",
-                borderRadius: "15px",
-                mr: 5,
-                "&:hover": { background: "#95B2B5", opacity: 0.9 },
-              }}
-              type="submit"
-            >
-              儲存變更
-            </Button>
-            <Button
-              sx={{
-                color: "#fff",
-                background: "#E2A086",
-                width: "100px",
-                height: "35px",
-                borderRadius: "15px",
-                "&:hover": { background: "#E2A086", opacity: 0.9 },
-              }}
-              type="reset"
-            >
-              清除重填
-            </Button>
+            <SubmitOrResetComponent model={model} />
           </Box>
         </form>
       </FormProvider>
@@ -221,7 +195,7 @@ const item = [
   { title: "對出乎意料的事物提心吊膽或驚嚇。", name: "item_ten" },
 ];
 
-function ItemRow() {
+function ItemRow({ model }) {
   const {
     register,
     formState: { errors },
@@ -254,22 +228,24 @@ function ItemRow() {
         >
           <Box component="td">
             <input
+              disabled={model}
               {...register(name, {
                 required: "必填",
               })}
               type="radio"
-              value="1"
+              value="是"
               id={name}
             />
             <Box htmlFor={name} component="label"></Box>
           </Box>
           <Box component="td">
             <input
+              disabled={model}
               {...register(name, {
                 required: "必填",
               })}
               type="radio"
-              value="0"
+              value="否"
               id={name + 1}
             />
             <Box htmlFor={name + 1} component="label"></Box>

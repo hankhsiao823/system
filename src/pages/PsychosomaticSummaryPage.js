@@ -1,16 +1,44 @@
 import React from "react";
 import { useForm, FormProvider, useFormContext } from "react-hook-form";
-import { Box, Button, Divider, Typography } from "@mui/material";
-import { ReactComponent as Edit } from "./../svg/edit.svg";
+import { Box, Divider, Typography } from "@mui/material";
+import EditModifyComponent from "../components/EditModifyComponent";
+import SubmitOrResetComponent from "../components/SubmitOrResetComponent";
+import { useModel } from "../hook/useModel";
+
+const defaultValues = {
+  tqs_point: "6",
+  gad_point: "11",
+  phq_point: "14",
+  suicidal_ideation: "有",
+  suicidal_ideation_remark: "",
+  psiq_point: "11",
+  psiq_evaluation_point_one: "1",
+  psiq_evaluation_point_two: "1",
+  psiq_evaluation_point_three: "1",
+  psiq_evaluation_point_four: "2",
+  psiq_evaluation_point_five: "2",
+  psiq_evaluation_point_six: "2",
+  psiq_evaluation_point_seven: "2",
+  evaluators: "陳慧文",
+  evaluators_date: "2022-06-08",
+};
 
 export const PsychosomaticSummaryPage = () => {
-  const methods = useForm({ mode: "onBlur" });
+  const model = useModel();
+
+  const methods = useForm({
+    mode: "onBlur",
+    defaultValues: React.useMemo(() => {
+      return model && defaultValues;
+    }, [model]),
+  });
 
   const {
-    register,
     handleSubmit,
+    register,
     formState: { errors },
   } = methods;
+  // arr.map((value,index)=>console.log(index+1))
 
   // const onSubmit = async (data) => {
   //   await fetch(
@@ -32,6 +60,7 @@ export const PsychosomaticSummaryPage = () => {
 
   const onSubmit = (data) => {
     console.log(data);
+    alert("儲存成功");
   };
 
   return (
@@ -80,12 +109,7 @@ export const PsychosomaticSummaryPage = () => {
         >
           收案紀錄表
         </Typography>
-        <Button
-          startIcon={<Edit />}
-          sx={{ fontSize: "1.5rem", color: "#6A594F", ml: "auto", mr: "61px" }}
-        >
-          修改
-        </Button>
+        <EditModifyComponent />
       </Box>
       <FormProvider {...methods}>
         <form
@@ -155,10 +179,10 @@ export const PsychosomaticSummaryPage = () => {
                     </Box>
                   </Box>
 
-                  <TsqRow />
-                  <GadRow />
-                  <PhqRow />
-                  <PsiqRow />
+                  <TsqRow model={model} />
+                  <GadRow model={model} />
+                  <PhqRow model={model} />
+                  <PsiqRow model={model} />
                 </Box>
               </Box>
             </Box>
@@ -180,6 +204,7 @@ export const PsychosomaticSummaryPage = () => {
               評估人員:
               <input
                 type="text"
+                disabled={model}
                 {...register("evaluators", {
                   required: "必填",
                 })}
@@ -199,6 +224,7 @@ export const PsychosomaticSummaryPage = () => {
               評估日期:
               <input
                 type="date"
+                disabled={model}
                 {...register("evaluators_date", {
                   required: "必填",
                 })}
@@ -212,33 +238,7 @@ export const PsychosomaticSummaryPage = () => {
             </Box>
           </Box>
           <Box sx={{ mt: 7 }}>
-            <Button
-              sx={{
-                color: "#fff",
-                background: "#95B2B5",
-                width: "100px",
-                height: "35px",
-                borderRadius: "15px",
-                mr: 5,
-                "&:hover": { background: "#95B2B5", opacity: 0.9 },
-              }}
-              type="submit"
-            >
-              儲存變更
-            </Button>
-            <Button
-              sx={{
-                color: "#fff",
-                background: "#E2A086",
-                width: "100px",
-                height: "35px",
-                borderRadius: "15px",
-                "&:hover": { background: "#E2A086", opacity: 0.9 },
-              }}
-              type="reset"
-            >
-              清除重填
-            </Button>
+            <SubmitOrResetComponent model={model} />
           </Box>
         </form>
       </FormProvider>
@@ -246,11 +246,12 @@ export const PsychosomaticSummaryPage = () => {
   );
 };
 
-function TsqRow() {
+function TsqRow({ model }) {
   const {
     register,
     formState: { errors },
   } = useFormContext();
+
   return (
     <>
       <Box component="tr">
@@ -259,6 +260,7 @@ function TsqRow() {
         </Box>
         <Box component="td">
           <select
+            disabled={model}
             {...register("tqs_point", {
               required: "必填",
             })}
@@ -269,7 +271,11 @@ function TsqRow() {
             }}
           >
             <option></option>
-            <option value="1">1</option>
+            {Array.apply(null, new Array(11)).map((value, index) => (
+              <option key={"option" + index} value={index + 1}>
+                {index + 1}
+              </option>
+            ))}
           </select>
           題<br />
           (總題數10題 選「是」題數)
@@ -290,7 +296,7 @@ function TsqRow() {
   );
 }
 
-function GadRow() {
+function GadRow({ model }) {
   const {
     register,
     formState: { errors },
@@ -303,6 +309,7 @@ function GadRow() {
         </Box>
         <Box component="td">
           <select
+            disabled={model}
             {...register("gad_point", {
               required: "必填",
             })}
@@ -313,7 +320,11 @@ function GadRow() {
             }}
           >
             <option></option>
-            <option value="1">1</option>
+            {Array.apply(null, new Array(21)).map((value, index) => (
+              <option key={"option" + index} value={index + 1}>
+                {index + 1}
+              </option>
+            ))}
           </select>
           分/21分
           {errors.gad_point && (
@@ -343,7 +354,7 @@ function GadRow() {
   );
 }
 
-function PhqRow() {
+function PhqRow({ model }) {
   const {
     register,
     formState: { errors },
@@ -356,6 +367,7 @@ function PhqRow() {
         </Box>
         <Box component="td">
           <select
+            disabled={model}
             {...register("phq_point", {
               required: "必填",
             })}
@@ -366,7 +378,11 @@ function PhqRow() {
             }}
           >
             <option></option>
-            <option value="1">1</option>
+            {Array.apply(null, new Array(27)).map((value, index) => (
+              <option key={"option" + index} value={index + 1}>
+                {index + 1}
+              </option>
+            ))}
           </select>
           分/27分
           {errors.phq_point && (
@@ -377,16 +393,18 @@ function PhqRow() {
           【題9】自殺意念留意
           <br /> (
           <input
+            disabled={model}
             type="radio"
-            value="yes"
+            value="有"
             {...register("suicidal_ideation", {
               required: "必填",
             })}
           />
           有
           <input
+            disabled={model}
             type="radio"
-            value="no"
+            value="無"
             {...register("suicidal_ideation", {
               required: "必填",
             })}
@@ -394,7 +412,11 @@ function PhqRow() {
           無)(指標題)
           <br />
           註:
-          <input type="text" {...register("suicidal_ideation_remark")} />
+          <input
+            disabled={model}
+            type="text"
+            {...register("suicidal_ideation_remark")}
+          />
           {errors.suicidal_ideation && (
             <Typography color="error">
               {errors.suicidal_ideation.message}
@@ -421,7 +443,7 @@ function PhqRow() {
   );
 }
 
-function PsiqRow() {
+function PsiqRow({ model }) {
   const {
     register,
     formState: { errors },
@@ -441,6 +463,7 @@ function PsiqRow() {
         </Box>
         <Box component="td">
           <select
+            disabled={model}
             {...register("psiq_point", {
               required: "必填",
             })}
@@ -451,7 +474,11 @@ function PsiqRow() {
             }}
           >
             <option></option>
-            <option value="1">1</option>
+            {Array.apply(null, new Array(21)).map((value, index) => (
+              <option key={"option" + index} value={index + 1}>
+                {index + 1}
+              </option>
+            ))}
           </select>
           分/21分
           <br />
@@ -466,6 +493,7 @@ function PsiqRow() {
               <Box sx={{ mr: "auto" }}>睡眠品質(題9):</Box>
               <Box>
                 <select
+                  disabled={model}
                   {...register("psiq_evaluation_point_one", {
                     required: "必填",
                   })}
@@ -476,7 +504,11 @@ function PsiqRow() {
                   }}
                 >
                   <option></option>
-                  <option value="1">1</option>
+                  {Array.apply(null, new Array(3)).map((value, index) => (
+                    <option key={"option" + index} value={index + 1}>
+                      {index + 1}
+                    </option>
+                  ))}
                 </select>
                 分/03分
                 {errors.psiq_evaluation_point_one && (
@@ -490,6 +522,7 @@ function PsiqRow() {
               <Box sx={{ mr: "auto" }}>睡眠潛伏期(題2+5a):</Box>
               <Box>
                 <select
+                  disabled={model}
                   {...register("psiq_evaluation_point_two", {
                     required: "必填",
                   })}
@@ -500,7 +533,11 @@ function PsiqRow() {
                   }}
                 >
                   <option></option>
-                  <option value="1">1</option>
+                  {Array.apply(null, new Array(3)).map((value, index) => (
+                    <option key={"option" + index} value={index + 1}>
+                      {index + 1}
+                    </option>
+                  ))}
                 </select>
                 分/03分
                 {errors.psiq_evaluation_point_two && (
@@ -514,6 +551,7 @@ function PsiqRow() {
               <Box sx={{ mr: "auto" }}>睡眠時數(題4): </Box>
               <Box>
                 <select
+                  disabled={model}
                   {...register("psiq_evaluation_point_three", {
                     required: "必填",
                   })}
@@ -524,7 +562,11 @@ function PsiqRow() {
                   }}
                 >
                   <option></option>
-                  <option value="1">1</option>
+                  {Array.apply(null, new Array(3)).map((value, index) => (
+                    <option key={"option" + index} value={index + 1}>
+                      {index + 1}
+                    </option>
+                  ))}
                 </select>
                 分/03分
                 {errors.psiq_evaluation_point_three && (
@@ -538,6 +580,7 @@ function PsiqRow() {
               <Box sx={{ mr: "auto" }}>睡眠效率(題4/躺床時數):</Box>
               <Box>
                 <select
+                  disabled={model}
                   {...register("psiq_evaluation_point_four", {
                     required: "必填",
                   })}
@@ -548,7 +591,11 @@ function PsiqRow() {
                   }}
                 >
                   <option></option>
-                  <option value="1">1</option>
+                  {Array.apply(null, new Array(3)).map((value, index) => (
+                    <option key={"option" + index} value={index + 1}>
+                      {index + 1}
+                    </option>
+                  ))}
                 </select>
                 分/03分
                 {errors.psiq_evaluation_point_four && (
@@ -562,6 +609,7 @@ function PsiqRow() {
               <Box sx={{ mr: "auto" }}>睡眠困擾(題5b~5j):</Box>
               <Box>
                 <select
+                  disabled={model}
                   {...register("psiq_evaluation_point_five", {
                     required: "必填",
                   })}
@@ -572,7 +620,11 @@ function PsiqRow() {
                   }}
                 >
                   <option></option>
-                  <option value="1">1</option>
+                  {Array.apply(null, new Array(3)).map((value, index) => (
+                    <option key={"option" + index} value={index + 1}>
+                      {index + 1}
+                    </option>
+                  ))}
                 </select>
                 分/03分
                 {errors.psiq_evaluation_point_five && (
@@ -586,6 +638,7 @@ function PsiqRow() {
               <Box sx={{ mr: "auto" }}>安眠藥物使用(題6):</Box>
               <Box>
                 <select
+                  disabled={model}
                   {...register("psiq_evaluation_point_six", {
                     required: "必填",
                   })}
@@ -596,7 +649,11 @@ function PsiqRow() {
                   }}
                 >
                   <option></option>
-                  <option value="1">1</option>
+                  {Array.apply(null, new Array(3)).map((value, index) => (
+                    <option key={"option" + index} value={index + 1}>
+                      {index + 1}
+                    </option>
+                  ))}
                 </select>
                 分/03分
                 {errors.psiq_evaluation_point_six && (
@@ -610,6 +667,7 @@ function PsiqRow() {
               <Box sx={{ mr: "auto" }}>白天功能運作(題7+8): </Box>
               <Box>
                 <select
+                  disabled={model}
                   {...register("psiq_evaluation_point_seven", {
                     required: "必填",
                   })}
@@ -620,9 +678,13 @@ function PsiqRow() {
                   }}
                 >
                   <option></option>
-                  <option value="1">1</option>
+                  {Array.apply(null, new Array(3)).map((value, index) => (
+                    <option key={"option" + index} value={index + 1}>
+                      {index + 1}
+                    </option>
+                  ))}
                 </select>
-                分/03分
+                分/03分                        
                 {errors.psiq_evaluation_point_seven && (
                   <Typography color="error">
                     {errors.psiq_evaluation_point_seven.message}

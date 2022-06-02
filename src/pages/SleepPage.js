@@ -1,33 +1,43 @@
 import React, { useState, useEffect } from "react";
 import { useForm, FormProvider, useFormContext } from "react-hook-form";
-import { Box, Button, Divider, Typography } from "@mui/material";
-import { ReactComponent as Edit } from "./../svg/edit.svg";
-import SleepService from "../services/sleep.service";
+import { Box, Divider, Typography } from "@mui/material";
+import EditModifyComponent from "../components/EditModifyComponent";
+// import SleepService from "../services/sleep.service";
+import SubmitOrResetComponent from "../components/SubmitOrResetComponent";
+import { useModel } from "../hook/useModel";
+
+const defaultValues = {
+  item_one: "01:00",
+  item_two: "30",
+  item_three: "10:00",
+  item_four: "8",
+  item_four_two: "0",
+  item_five: "1",
+  item_six: "1",
+  item_seven: "1",
+  item_eight: "0",
+  item_nine: "1",
+  item_ten: "1",
+  item_eleven: "1",
+  item_twelve: "1",
+  item_thirteen: "1",
+  item_fourteen: "1",
+  item_fifteen: "0",
+  item_sixteen: "0",
+  item_seventeen: "1",
+  item_eighteen: "0",
+};
 
 export const SleepPage = () => {
   const [total, setTotal] = useState(false);
-  const defaultValues = {
-    item_eight: "",
-    item_eighteen: "",
-    item_eleven: "",
-    item_fifteen: "",
-    item_five: "",
-    item_four: "",
-    item_four_two: "",
-    item_fourteen: "",
-    item_nine: "",
-    item_one: "",
-    item_seven: "",
-    item_seventeen: "",
-    item_six: "",
-    item_sixteen: "",
-    item_ten: "",
-    item_thirteen: "",
-    item_three: "",
-    item_twelve: "",
-    item_two: "",
-  };
-  const methods = useForm({ mode: "onBlur", defaultValues });
+  const model = useModel();
+
+  const methods = useForm({
+    mode: "onBlur",
+    defaultValues: React.useMemo(() => {
+      return model && defaultValues;
+    }, [model]),
+  });
 
   const {
     handleSubmit,
@@ -57,6 +67,9 @@ export const SleepPage = () => {
   const update = React.useRef(false);
 
   useEffect(() => {
+    if (model) {
+      setTotal(handleTotal());
+    }
     if (update.current) {
       setTotal(handleTotal());
     }
@@ -64,7 +77,6 @@ export const SleepPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watch()]);
 
-  console.log(update.current);
   function getFallAsleep(value) {
     let result;
     if (value < 30) {
@@ -153,6 +165,8 @@ export const SleepPage = () => {
     // SleepService.createSleep(data)
     //   .then((res) => console.log(res))
     //   .catch((e) => console.log(e));
+    console.log(data);
+    alert("儲存成功");
   };
 
   return (
@@ -201,12 +215,7 @@ export const SleepPage = () => {
         >
           匹茲堡睡眠品質量表
         </Typography>
-        <Button
-          startIcon={<Edit />}
-          sx={{ fontSize: "1.5rem", color: "#6A594F", ml: "auto", mr: "61px" }}
-        >
-          修改
-        </Button>
+        <EditModifyComponent />
       </Box>
       <Typography
         sx={{ fontSize: "1.75rem", fontWeight: "bold", mx: "49px", mb: "40px" }}
@@ -238,6 +247,7 @@ export const SleepPage = () => {
             <Box sx={{ display: "flex", alignItems: "center" }}>
               1.過去一個月來,您晚上通常幾點上床睡覺?
               <input
+                disabled={model}
                 type="time"
                 {...register("item_one", {
                   required: "必填",
@@ -250,6 +260,7 @@ export const SleepPage = () => {
             <Box sx={{ display: "flex", alignItems: "center" }}>
               2.過去一個月來,您在上床後,通常躺多久才能入睡?
               <input
+                disabled={model}
                 type="text"
                 {...register("item_two", {
                   required: "必填",
@@ -264,6 +275,7 @@ export const SleepPage = () => {
               3.過去一個月來,您上通常幾點起床?
               <input
                 type="time"
+                disabled={model}
                 {...register("item_three", {
                   required: "必填",
                 })}
@@ -278,6 +290,7 @@ export const SleepPage = () => {
               4過去一個月來,您每天晚上真正睡著的時間約多少?
               <input
                 type="text"
+                disabled={model}
                 {...register("item_four", {
                   required: "必填",
                 })}
@@ -290,6 +303,7 @@ export const SleepPage = () => {
               )}
               <input
                 type="text"
+                disabled={model}
                 {...register("item_four_two", {
                   required: "必填",
                 })}
@@ -389,67 +403,41 @@ export const SleepPage = () => {
                     </Box>
                   </Box>
 
-                  <ItemRow />
+                  <ItemRow model={model} />
                 </Box>
               </Box>
             </Box>
-            <OtherTable />
-            <Box
-            sx={{
-              display: "flex",
-              fontSize: "1.5rem",
-              fontWeight: "bold",
-              alignItems: "center",
-              justifyContent:'flex-end'
-            }}
-          >
-            總分
+            <OtherTable model={model} />
             <Box
               sx={{
-                border: "2px solid #8AA6B1",
-                width: "128px",
-                height: "47px",
-                textAlign: "center",
                 display: "flex",
+                fontSize: "1.5rem",
+                fontWeight: "bold",
                 alignItems: "center",
-                justifyContent: "center",
-                borderRadius: "16px",
-                ml:1,
+                justifyContent: "flex-end",
               }}
             >
-              {total}
+              總分
+              <Box
+                sx={{
+                  border: "2px solid #8AA6B1",
+                  width: "128px",
+                  height: "47px",
+                  textAlign: "center",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: "16px",
+                  ml: 1,
+                }}
+              >
+                {total}
+              </Box>
             </Box>
           </Box>
-          </Box>
-          
+
           <Box sx={{ mt: 7, alignSelf: "center" }}>
-            <Button
-              sx={{
-                color: "#fff",
-                background: "#95B2B5",
-                width: "100px",
-                height: "35px",
-                borderRadius: "15px",
-                mr: 5,
-                "&:hover": { background: "#95B2B5", opacity: 0.9 },
-              }}
-              type="submit"
-            >
-              儲存變更
-            </Button>
-            <Button
-              sx={{
-                color: "#fff",
-                background: "#E2A086",
-                width: "100px",
-                height: "35px",
-                borderRadius: "15px",
-                "&:hover": { background: "#E2A086", opacity: 0.9 },
-              }}
-              type="reset"
-            >
-              清除重填
-            </Button>
+            <SubmitOrResetComponent model={model} />
           </Box>
         </form>
       </FormProvider>
@@ -479,7 +467,7 @@ const item = [
   },
 ];
 
-function ItemRow() {
+function ItemRow({ model }) {
   const {
     register,
     formState: { errors },
@@ -491,9 +479,8 @@ function ItemRow() {
           component="tr"
           key={name}
           sx={{
-            
             "& td": {
-              position: 'relative',
+              position: "relative",
               p: 1,
             },
             "& input[type='radio']": {
@@ -505,11 +492,11 @@ function ItemRow() {
                 // justifyContent: "center",
                 // width: "100%",
                 // height: "65px",
-                position: 'absolute',
+                position: "absolute",
                 left: -1,
                 right: -1,
-                top:-1,
-                bottom:-1
+                top: -1,
+                bottom: -1,
               },
               "&:checked + label": {
                 background: "#A4B6BA",
@@ -534,6 +521,7 @@ function ItemRow() {
           {[0, 1, 2, 3].map((value) => (
             <Box component="td" key={name + value}>
               <input
+                disabled={model}
                 {...register(name, {
                   required: "必填",
                 })}
@@ -550,7 +538,7 @@ function ItemRow() {
   );
 }
 
-function OtherTable() {
+function OtherTable({ model }) {
   const {
     register,
     formState: { errors },
@@ -619,18 +607,18 @@ function OtherTable() {
               component="tr"
               sx={{
                 "& td": {
-                  position: 'relative',
+                  position: "relative",
                   p: 1,
                 },
                 "& input[type='radio']": {
                   appearance: "none",
                   display: "none",
                   "& + label": {
-                    position: 'absolute',
+                    position: "absolute",
                     left: -1,
                     right: -1,
-                    top:-1,
-                    bottom:-1
+                    top: -1,
+                    bottom: -1,
                   },
                   "&:checked + label": {
                     background: "#A4B6BA",
@@ -660,6 +648,7 @@ function OtherTable() {
                 (value, index) => (
                   <Box component="td" key={value}>
                     <input
+                      disabled={model}
                       {...register("item_seventeen", {
                         required: "必填",
                       })}
@@ -737,18 +726,18 @@ function OtherTable() {
               component="tr"
               sx={{
                 "& td": {
-                  position: 'relative',
+                  position: "relative",
                   p: 1,
                 },
                 "& input[type='radio']": {
                   appearance: "none",
                   display: "none",
                   "& + label": {
-                    position: 'absolute',
+                    position: "absolute",
                     left: -1,
                     right: -1,
-                    top:-1,
-                    bottom:-1
+                    top: -1,
+                    bottom: -1,
                   },
                   "&:checked + label": {
                     background: "#A4B6BA",
@@ -777,6 +766,7 @@ function OtherTable() {
               {["非常好", "好", "不好", "非常不好"].map((value, index) => (
                 <Box component="td" key={value}>
                   <input
+                    disabled={model}
                     {...register("item_eighteen", {
                       required: "必填",
                     })}

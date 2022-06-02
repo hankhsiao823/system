@@ -13,23 +13,47 @@ import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-
-
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
+const createData = (name, id) => {
+  return { name, id };
+};
 
 const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
+  createData("王大明", "123456789"),
+  createData("顏宜臻", "135871435"),
+  createData("夏欣馨", "210548738"),
+  createData("廖家豪", "987443858"),
 ];
+
+const handleUserState = (action, user) => {
+  switch (action) {
+    case "read":
+      localStorage.setItem(
+        "cinguan_token",
+        JSON.stringify({ ...user, state: "read" })
+      );
+      break;
+    case "create":
+      localStorage.setItem(
+        "cinguan_token",
+        JSON.stringify({ ...user, state: "create" })
+      );
+      break;
+    default:
+      break;
+  }
+};
 
 function CreateListTable({ type }) {
   const navigate = useNavigate();
-  const { office_code } = JSON.parse(localStorage.getItem("cinguan_token"));
+  const user = JSON.parse(localStorage.getItem("cinguan_token"));
+
+  const handleClick = (type, user) => {
+    handleUserState(type, user);
+    user.office_code === "B"
+      ? navigate("/edit/distress")
+      : navigate("/edit/detail");
+  };
+
   return (
     <TableContainer sx={{ minWidth: "280px", width: "100%", px: 4 }}>
       <Table sx={{ overflow: "hidden" }}>
@@ -51,9 +75,9 @@ function CreateListTable({ type }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {rows.map(({ id, name }) => (
             <TableRow
-              key={row.name}
+              key={id}
               sx={{
                 "& td": {
                   border: "3px solid #5E574E",
@@ -63,10 +87,10 @@ function CreateListTable({ type }) {
               }}
             >
               <TableCell align="center" sx={{ width: "20%" }}>
-                王大明
+                {name}
               </TableCell>
               <TableCell align="center" sx={{ width: "20%" }}>
-                123456789
+                {id}
               </TableCell>
               <TableCell align="center" sx={{ width: "30%" }}>
                 {type}
@@ -88,11 +112,7 @@ function CreateListTable({ type }) {
                         lineHeight: "1.25rem",
                       }}
                       startIcon={<AddIcon />}
-                      onClick={() =>
-                        office_code === "B"
-                          ? navigate("/edit/distress")
-                          : navigate("/edit/detail")
-                      }
+                      onClick={() => handleClick("create", user)}
                     >
                       新增
                     </Button>
@@ -106,6 +126,7 @@ function CreateListTable({ type }) {
                         lineHeight: "1.25rem",
                       }}
                       startIcon={<RemoveRedEyeOutlinedIcon />}
+                      onClick={() => handleClick("read", user)}
                     >
                       查看
                     </Button>
@@ -120,8 +141,15 @@ function CreateListTable({ type }) {
   );
 }
 
-function DetailListTable() {
+function DetailListTable({ url }) {
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("cinguan_token"));
+
+  const handleClick = (type, user) => {
+    handleUserState(type, user);
+    navigate(url);
+  };
+
   return (
     <TableContainer sx={{ minWidth: "280px", width: "100%", px: 4 }}>
       <Table sx={{ overflow: "hidden" }}>
@@ -142,9 +170,9 @@ function DetailListTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {rows.map(({ id, name }) => (
             <TableRow
-              key={row.name}
+              key={id}
               // sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               sx={{
                 "& td": {
@@ -155,10 +183,10 @@ function DetailListTable() {
               }}
             >
               <TableCell align="center" sx={{ width: "20%" }}>
-                王大明
+                {name}
               </TableCell>
               <TableCell align="center" sx={{ width: "3 0%" }}>
-                123456789
+                {id}
               </TableCell>
               <TableCell align="center" sx={{ flex: 1 }}>
                 <Box
@@ -177,6 +205,9 @@ function DetailListTable() {
                         lineHeight: "1.25rem",
                       }}
                       startIcon={<RemoveRedEyeOutlinedIcon />}
+                      onClick={() => {
+                        handleClick("read", user);
+                      }}
                     >
                       查看
                     </Button>
@@ -190,7 +221,7 @@ function DetailListTable() {
                         lineHeight: "1.25rem",
                       }}
                       startIcon={<DriveFileRenameOutlineOutlinedIcon />}
-                      onClick={() => navigate("/edit/detail")}
+                      onClick={() => alert("無權限修改")}
                     >
                       修改
                     </Button>
@@ -241,9 +272,9 @@ function TrashListTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {rows.map(({name}) => (
             <TableRow
-              key={row.name}
+              key={name}
               sx={{
                 "& td": {
                   border: "3px solid #5E574E",

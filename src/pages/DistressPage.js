@@ -1,10 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
-import { Box, Button, Divider, Typography } from "@mui/material";
-import { ReactComponent as Edit } from "./../svg/edit.svg";
+import { Box, Divider, Typography } from "@mui/material";
+import EditModifyComponent from "../components/EditModifyComponent";
+import SubmitOrResetComponent from "../components/SubmitOrResetComponent";
+import { useModel } from "../hook/useModel";
 
 export const DistressPage = () => {
-  const methods = useForm({ mode: "onBlur" });
+  const model = useModel();
+
+  const methods = useForm({
+    mode: "onBlur",
+    defaultValues: React.useMemo(() => {
+      return model && { item: "6" };
+    }, [model]),
+  });
 
   const {
     handleSubmit,
@@ -12,26 +21,9 @@ export const DistressPage = () => {
     formState: { errors },
   } = methods;
 
-  // const onSubmit = async (data) => {
-  //   await fetch(
-  //     "https://1e01-2001-b011-4007-19c5-5092-66f9-5015-4a08.ngrok.io/api/createcase",
-  //     {
-  //       method: "POST",
-  //       mode: "cors",
-  //       body: JSON.stringify(data),
-  //       headers: { "Content-Type": "application/json" },
-  //     }
-  //   )
-  //     .then((res) => res.json())
-  //     .then((json) => console.log(json))
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  //   alert(data);
-  // };
-
   const onSubmit = (data) => {
     console.log(data);
+    alert("儲存成功");
   };
 
   return (
@@ -87,12 +79,7 @@ export const DistressPage = () => {
         >
           困擾溫度計
         </Typography>
-        <Button
-          startIcon={<Edit />}
-          sx={{ fontSize: "1.5rem", color: "#6A594F", ml: "auto", mr: "61px" }}
-        >
-          修改
-        </Button>
+        <EditModifyComponent />
       </Box>
       <Typography
         sx={{ fontSize: "1.5rem", fontWeight: "bold", textAlign: "center" }}
@@ -136,6 +123,7 @@ export const DistressPage = () => {
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => (
                 <React.Fragment key={"radio" + value}>
                   <input
+                    disabled={model}
                     type="radio"
                     {...register("item", {
                       required: "必填",
@@ -174,35 +162,8 @@ export const DistressPage = () => {
               </Typography>
             )}
           </Box>
-
           <Box sx={{ position: "absolute", bottom: "20px" }}>
-            <Button
-              sx={{
-                color: "#fff",
-                background: "#95B2B5",
-                width: "100px",
-                height: "35px",
-                borderRadius: "15px",
-                mr: 5,
-                "&:hover": { background: "#95B2B5", opacity: 0.9 },
-              }}
-              type="submit"
-            >
-              儲存變更
-            </Button>
-            <Button
-              sx={{
-                color: "#fff",
-                background: "#E2A086",
-                width: "100px",
-                height: "35px",
-                borderRadius: "15px",
-                "&:hover": { background: "#E2A086", opacity: 0.9 },
-              }}
-              type="reset"
-            >
-              清除重填
-            </Button>
+            <SubmitOrResetComponent model={model} />
           </Box>
         </form>
       </FormProvider>

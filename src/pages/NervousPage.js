@@ -1,33 +1,35 @@
 import React from "react";
 import { useForm, FormProvider, useFormContext } from "react-hook-form";
-import { Box, Button, Divider, Typography } from "@mui/material";
-import { ReactComponent as Edit } from "./../svg/edit.svg";
+import { Box, Divider, Typography } from "@mui/material";
+import EditModifyComponent from "../components/EditModifyComponent";
+import SubmitOrResetComponent from "../components/SubmitOrResetComponent";
+import { useModel } from "../hook/useModel";
+
+const defaultValues = {
+  item_one: "0",
+  item_two: "1",
+  item_three: "2",
+  item_four: "3",
+  item_five: "2",
+  item_six: "2",
+  item_seven: "1",
+};
 
 export const NervousPage = () => {
-  const methods = useForm({ mode: "onBlur" });
+  const model = useModel();
+
+  const methods = useForm({
+    mode: "onBlur",
+    defaultValues: React.useMemo(() => {
+      return model && defaultValues;
+    }, [model]),
+  });
 
   const { handleSubmit } = methods;
 
-  // const onSubmit = async (data) => {
-  //   await fetch(
-  //     "https://1e01-2001-b011-4007-19c5-5092-66f9-5015-4a08.ngrok.io/api/createcase",
-  //     {
-  //       method: "POST",
-  //       mode: "cors",
-  //       body: JSON.stringify(data),
-  //       headers: { "Content-Type": "application/json" },
-  //     }
-  //   )
-  //     .then((res) => res.json())
-  //     .then((json) => console.log(json))
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  //   alert(data);
-  // };
-
   const onSubmit = (data) => {
     console.log(data);
+    alert("儲存成功");
   };
 
   return (
@@ -76,12 +78,7 @@ export const NervousPage = () => {
         >
           焦慮自我評估量表
         </Typography>
-        <Button
-          startIcon={<Edit />}
-          sx={{ fontSize: "1.5rem", color: "#6A594F", ml: "auto", mr: "61px" }}
-        >
-          修改
-        </Button>
+        <EditModifyComponent />
       </Box>
       <Typography
         sx={{ fontSize: "2rem", fontWeight: "bold", ml: "49px", mb: "82px" }}
@@ -165,40 +162,14 @@ export const NervousPage = () => {
                     </Box>
                   </Box>
 
-                  <ItemRow />
+                  <ItemRow model={model} />
                 </Box>
               </Box>
             </Box>
           </Box>
 
           <Box sx={{ mt: 7 }}>
-            <Button
-              sx={{
-                color: "#fff",
-                background: "#95B2B5",
-                width: "100px",
-                height: "35px",
-                borderRadius: "15px",
-                mr: 5,
-                "&:hover": { background: "#95B2B5", opacity: 0.9 },
-              }}
-              type="submit"
-            >
-              儲存變更
-            </Button>
-            <Button
-              sx={{
-                color: "#fff",
-                background: "#E2A086",
-                width: "100px",
-                height: "35px",
-                borderRadius: "15px",
-                "&:hover": { background: "#E2A086", opacity: 0.9 },
-              }}
-              type="reset"
-            >
-              清除重填
-            </Button>
+            <SubmitOrResetComponent model={model} />
           </Box>
         </form>
       </FormProvider>
@@ -216,7 +187,7 @@ const item = [
   { title: "感到害怕、就像要發生可怕的事情", name: "item_seven" },
 ];
 
-function ItemRow() {
+function ItemRow({ model }) {
   const {
     register,
     formState: { errors },
@@ -264,11 +235,12 @@ function ItemRow() {
           {[0, 1, 2, 3].map((value) => (
             <Box component="td" key={name + value}>
               <input
+                disabled={model}
                 {...register(name, {
                   required: "必填",
                 })}
                 type="radio"
-                value="1"
+                value={value}
                 id={name + value}
               />
               <Box htmlFor={name + value} component="label"></Box>

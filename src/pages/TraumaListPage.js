@@ -1,10 +1,10 @@
 import { Box, Container, Divider, TextField, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { DetailListTable } from "../components/Tables";
 import { ReactComponent as Search } from "./../svg/search.svg";
 
 export const TraumaListPage = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   return (
     <div style={{ flex: 1, overflowY: "scroll", padding: "0px 0px 56px 0px" }}>
@@ -36,7 +36,7 @@ export const TraumaListPage = () => {
           fontSize: "1.875rem",
           fontWeight: "bold",
           mt: "1.5rem",
-          mx:"52px"
+          mx: "52px",
         }}
       >
         創傷篩檢問卷
@@ -72,7 +72,7 @@ export const TraumaListPage = () => {
         />
       </Box>
       <Container maxWidth="md">
-        <DetailListTable />
+        <DetailListTable url="/edit/trauma" />
       </Container>
     </div>
   );

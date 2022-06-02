@@ -72,7 +72,7 @@ export const DetailListPage = () => {
         />
       </Box>
       <Container maxWidth="md">
-        <DetailListTable />
+        <DetailListTable url='/edit/detail'/>
       </Container>
     </div>
   );

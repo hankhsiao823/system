@@ -36,7 +36,7 @@ export default function RoutesComponent() {
           path: "/trauma-list",
           key: "trauma-list",
         },
-        { element: UndonePageComponent, path: "/undone", key: "undone" },
+        { element: UndonePageComponent, path: "/undone/*", key: "undone" },
       ],
     },
     {
@@ -55,7 +55,7 @@ export default function RoutesComponent() {
         { element: TraumaPage, path: "/edit/trauma", key: "trauma" },
         { element: SleepPage, path: "/edit/sleep", key: "sleep" },
         { element: DistressPage, path: "/edit/distress", key: "distress" },
-        { element: UndonePageComponent, path: "/edit/undone", key: "undone" },
+        { element: UndonePageComponent, path: "/edit/undone/*", key: "undone" },
       ],
     },
   ];

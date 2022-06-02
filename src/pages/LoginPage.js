@@ -26,11 +26,6 @@ const labelStyle = {
   color: "#5E574E",
 };
 
-const userList = [
-  { username: "root1", password: "123456", root: "root1" },
-  { username: "root2", password: "123456", root: "root2" },
-  { username: "root3", password: "123456", root: "root3" },
-];
 
 export const LoginPage = () => {
   const navigate = useNavigate();
@@ -47,7 +42,7 @@ export const LoginPage = () => {
       .then((res) => {
         const data = res.data;
         const root = data[0]
-        localStorage.setItem("cinguan_token",JSON.stringify(root));
+        localStorage.setItem("cinguan_token",JSON.stringify({...root,state:''}));
         navigate("/");
       })
       .catch((e) => console.log(e));
